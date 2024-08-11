@@ -12,11 +12,11 @@ module.exports = {
                 .setRequired(true))
         .addStringOption(option => 
             option.setName('start_date')
-                .setDescription('Start date of the event (MM/DD/YYYY or M/D/YY)')
+                .setDescription('Start date of the event (MM/DD/YYYY and/or M/D/YY)')
                 .setRequired(true))
         .addStringOption(option => 
             option.setName('end_date')
-                .setDescription('End date of the event (MM/DD/YYYY or M/D/YY)')
+                .setDescription('End date of the event (MM/DD/YYYY and/or M/D/YY)')
                 .setRequired(true)),
     async execute(interaction) {
         const eventName = interaction.options.getString('event_name');
