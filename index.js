@@ -3,6 +3,7 @@ const path = require('path');
 const { Client, Collection, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { clientId, guildId } = require('./config.json');
 const dotenv = require('dotenv');
+const sqlite3 = require('sqlite3').verbose();
 dotenv.config();
 
 const token = process.env.DISCORD_TOKEN;
@@ -47,6 +48,15 @@ const rest = new REST({ version: '10' }).setToken(token);
     }
 })();
 
+// Initialize the database
+const db = new sqlite3.Database(path.join(__dirname, 'events.db'), (err) => {
+    if (err) {
+        console.error('Error opening database', err);
+    } else {
+        console.log('Connected to the SQLite database.');
+    }
+});
+
 client.login(token);
 
 client.on('ready', () => {
@@ -61,9 +71,22 @@ client.on('interactionCreate', async interaction => {
     if (!command) return;
 
     try {
-        await command.execute(interaction);
+        await command.execute(interaction, db);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
+});
+
+// Proper cleanup when the process is about to exit
+process.on('SIGINT', () => {
+    console.log('Closing database connection...');
+    db.close((err) => {
+        if (err) {
+            console.error('Error closing database:', err);
+        } else {
+            console.log('Database connection closed.');
+        }
+        process.exit(0);
+    });
 });
