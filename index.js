@@ -48,7 +48,7 @@ const rest = new REST({ version: '10' }).setToken(token);
     }
 })();
 
-// Initialize the database
+// init database
 const db = new sqlite3.Database(path.join(__dirname, 'events.db'), (err) => {
     if (err) {
         console.error('Error opening database', err);
@@ -78,7 +78,7 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// Proper cleanup when the process is about to exit
+// signout database closing
 process.on('SIGINT', () => {
     console.log('Closing database connection...');
     db.close((err) => {

@@ -1,3 +1,5 @@
 .env
 board.json
 config.json
+events.db
+event.db
